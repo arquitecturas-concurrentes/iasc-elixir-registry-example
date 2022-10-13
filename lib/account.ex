@@ -95,16 +95,10 @@ defmodule Account do
     GenServer.call(via_tuple(account_id), :get_details)
   end
 
-  @doc """
-  Return the number of widgets ordered by this account
-  """
   def packages_ordered(account_id) do
     GenServer.call(via_tuple(account_id), :get_packages_ordered)
   end
 
-  @doc """
-  Function to indicate that this account ordered a widget
-  """
   def order_package(account_id) do
     GenServer.call(via_tuple(account_id), :order_package)
   end
