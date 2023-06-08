@@ -14,7 +14,7 @@ defmodule Account do
   """
   # when guard clause to ensure it is an integer
   def start_link(account_id) when is_integer(account_id) do
-    GenServer.start_link(__MODULE__, [account_id], name: via_tuple(account_id))
+    GenServer.start_link(__MODULE__, account_id, name: {:via, Registry, {@account_registry_name, account_id}})
   end
 
   # child spec
@@ -26,7 +26,7 @@ defmodule Account do
   defp via_tuple(account_id), do: {:via, Registry, {@account_registry_name, account_id}}
 
 
-  def init([account_id]) do
+  def init(account_id) do
     send(self(), :init_data)
     send(self(), :set_terminate_timer)
 
@@ -89,6 +89,14 @@ defmodule Account do
   end
 
   @doc """
+  Ungracefully end this process
+  """
+  def handle_info(:kill_process, state) do
+    Logger.info("Killing Process... Account ID: #{state.account_id}")
+    {:stop, :kill , state}
+  end
+
+  @doc """
   Return some details (state) for this account process
   """
   def details(account_id) do
@@ -101,6 +109,14 @@ defmodule Account do
 
   def order_package(account_id) do
     GenServer.call(via_tuple(account_id), :order_package)
+  end
+
+  def close_account(account_id) do
+    Process.send_after(account_id, :end_process, 0)
+  end
+
+  def kill_process(account_id) do
+    Process.send_after(account_id, :kill_process, 0)
   end
 
   @doc """
