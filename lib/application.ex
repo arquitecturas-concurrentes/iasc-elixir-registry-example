@@ -1,5 +1,5 @@
 defmodule IASCRegistry.Application do
-  # See http://elixir-lang.org/docs/stable/elixir/Application.html
+  # See https://hexdocs.pm/elixir/1.14/Application.html
   # for more information on OTP Applications
   
   @moduledoc false
@@ -13,10 +13,11 @@ defmodule IASCRegistry.Application do
     # Define workers and child supervisors to be supervised
     children = [
       %{id: AccountDynamicSupervisor, start: {AccountDynamicSupervisor, :start_link, [[]]} },
+      # https://hexdocs.pm/elixir/1.14/Registry.html
       {Registry, [keys: :unique, name: @registry_name]}
     ]
 
-    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
+    # See https://hexdocs.pm/elixir/1.14/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: IASCRegistry.Supervisor]
     Supervisor.start_link(children, opts)
