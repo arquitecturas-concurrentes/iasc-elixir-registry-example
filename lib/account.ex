@@ -81,7 +81,7 @@ defmodule Account do
   end
 
   @doc """
-  Gracefully end this process
+   Gracefully end this process
   """
   def handle_info(:end_process, state) do
     Logger.info("Process terminating... Account ID: #{state.account_id}")
@@ -89,7 +89,7 @@ defmodule Account do
   end
 
   @doc """
-  Ungracefully end this process
+   Ungracefully end this process
   """
   def handle_info(:kill_process, state) do
     Logger.info("Killing Process... Account ID: #{state.account_id}")

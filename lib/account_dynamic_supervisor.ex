@@ -1,8 +1,6 @@
 defmodule AccountDynamicSupervisor do
   use DynamicSupervisor
 
-  @registry_name :account_main_registry
-
   def start_link(init_arg) do
     DynamicSupervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
   end
