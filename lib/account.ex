@@ -14,7 +14,7 @@ defmodule Account do
   """
   # when guard clause to ensure it is an integer
   def start_link(account_id) when is_integer(account_id) do
-    GenServer.start_link(__MODULE__, account_id, name: {:via, Registry, {@account_registry_name, account_id}})
+    GenServer.start_link(__MODULE__, account_id, name: {:via, Registry, {@account_registry_name, account_id, "Cuenta#{account_id}"}})
   end
 
   # child spec
@@ -25,6 +25,15 @@ defmodule Account do
   # registry lookup handler
   defp via_tuple(account_id), do: {:via, Registry, {@account_registry_name, account_id}}
 
+  @doc """
+  Returns the pid for the `account_id` stored in the registry
+  """
+  def whereis(account_id) do
+    case Registry.lookup(@account_registry_name, account_id) do
+      [{pid, _}] -> pid
+      [] -> nil
+    end
+  end
 
   def init(account_id) do
     send(self(), :init_data)
@@ -117,15 +126,5 @@ defmodule Account do
 
   def kill_process(account_id) do
     Process.send_after(account_id, :kill_process, 0)
-  end
-
-  @doc """
-  Returns the pid for the `account_id` stored in the registry
-  """
-  def whereis(account_id) do
-    case Registry.lookup(@account_registry_name, account_id) do
-      [{pid, _}] -> pid
-      [] -> nil
-    end
   end
 end
