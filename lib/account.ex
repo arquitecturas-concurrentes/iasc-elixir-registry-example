@@ -54,25 +54,25 @@ defmodule Account do
 
     {:reply, response, state}
   end
-  
+
   def handle_call(:get_packages_ordered, _from, %__MODULE__{ packages_ordered: packages_ordered } = state) do
     {:reply, packages_ordered, state}
   end
 
   def handle_call(:order_package, _from, %__MODULE__{ packages_ordered: packages_ordered } = state) do
-    {:reply, :ok, %__MODULE__{ state | packages_ordered: packages_ordered + 1 }}
+    {:reply, :ok, %{ state | packages_ordered: packages_ordered + 1 }}
   end
 
-  def handle_info(:init_data, state = %{account_id: account_id}) do
+  def handle_info(:init_data, state) do
     updated_state =
-      %__MODULE__{ state | packages_ordered: 1 }
+      %{ state | packages_ordered: 1 }
 
     {:noreply, updated_state}
   end
 
   def handle_info(:set_terminate_timer, %__MODULE__{ timer_ref: nil } = state) do
     updated_state =
-      %__MODULE__{ state | timer_ref: Process.send_after(self(), :end_process, @process_lifetime_ms) }
+      %{ state | timer_ref: Process.send_after(self(), :end_process, @process_lifetime_ms) }
 
     {:noreply, updated_state}
   end
@@ -84,7 +84,7 @@ defmodule Account do
 
     # override timer
     updated_state =
-      %__MODULE__{ state | timer_ref: Process.send_after(self(), :end_process, @process_lifetime_ms) }
+      %{ state | timer_ref: Process.send_after(self(), :end_process, @process_lifetime_ms) }
 
     {:noreply, updated_state}
   end
