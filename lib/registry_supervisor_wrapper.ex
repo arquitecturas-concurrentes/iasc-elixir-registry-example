@@ -18,6 +18,19 @@ defmodule RegistrySupervisorWrapper do
     end
   end
 
+  def accounts do
+    AccountDynamicSupervisor.which_children
+      |> Enum.map(fn {_, account_proc_pid, _, _} ->
+        account_id = Registry.keys(@registry_name, account_proc_pid) |> List.first
+        {
+          account_proc_pid,
+          account_id,
+          Registry.values(@registry_name, account_id, account_proc_pid)
+        }
+      end)
+      |> Enum.sort
+  end
+
   def account_ids do
     AccountDynamicSupervisor.which_children
     |> Enum.map(fn {_, account_proc_pid, _, _} ->

@@ -79,7 +79,7 @@ defmodule Account do
 
   def handle_info(:set_terminate_timer, %__MODULE__{ timer_ref: timer_ref } = state) do
     # cancel existing send_after calls
-    # https://hexdocs.pm/elixir/1.12/Process.html#cancel_timer/2
+    # https://hexdocs.pm/elixir/1.18/Process.html#cancel_timer/2
     timer_ref |> Process.cancel_timer
 
     # override timer
@@ -109,22 +109,27 @@ defmodule Account do
   Return some details (state) for this account process
   """
   def details(account_id) do
-    GenServer.call(via_tuple(account_id), :get_details)
+    pid = Account.whereis(account_id)
+    GenServer.call(via_tuple(pid), :get_details)
   end
 
   def packages_ordered(account_id) do
-    GenServer.call(via_tuple(account_id), :get_packages_ordered)
+    pid = Account.whereis(account_id)
+    GenServer.call(via_tuple(pid), :get_packages_ordered)
   end
 
   def order_package(account_id) do
-    GenServer.call(via_tuple(account_id), :order_package)
+    pid = Account.whereis(account_id)
+    GenServer.call(via_tuple(pid), :order_package)
   end
 
   def close_account(account_id) do
-    Process.send_after(account_id, :end_process, 0)
+    pid = Account.whereis(account_id)
+    send(pid, :end_process)
   end
 
   def kill_process(account_id) do
-    Process.send_after(account_id, :kill_process, 0)
+    pid = Account.whereis(account_id)
+    send(pid, :kill_process)
   end
 end
