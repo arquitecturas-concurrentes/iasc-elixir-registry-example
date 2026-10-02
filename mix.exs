@@ -5,7 +5,7 @@ defmodule IascRegistryExample.MixProject do
     [
       app: :iasc_registry_example,
       version: "0.1.1",
-      elixir: "~> 1.19-dev",
+      elixir: "~> 1.19",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
