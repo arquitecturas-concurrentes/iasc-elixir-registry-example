@@ -110,17 +110,15 @@ defmodule Account do
   """
   def details(account_id) do
     pid = Account.whereis(account_id)
-    GenServer.call(via_tuple(pid), :get_details)
+    GenServer.call(pid, :get_details)
   end
 
   def packages_ordered(account_id) do
-    pid = Account.whereis(account_id)
-    GenServer.call(via_tuple(pid), :get_packages_ordered)
+    GenServer.call(via_tuple(account_id), :get_packages_ordered)
   end
 
   def order_package(account_id) do
-    pid = Account.whereis(account_id)
-    GenServer.call(via_tuple(pid), :order_package)
+    GenServer.call(via_tuple(account_id), :order_package)
   end
 
   def close_account(account_id) do

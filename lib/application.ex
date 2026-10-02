@@ -13,11 +13,11 @@ defmodule IASCRegistry.Application do
     # Define workers and child supervisors to be supervised
     children = [
       %{id: AccountDynamicSupervisor, start: {AccountDynamicSupervisor, :start_link, [[]]} },
-      # https://hexdocs.pm/elixir/1.18/Registry.html
+      # https://hexdocs.pm/elixir/1.19/Registry.html
       {Registry, [keys: :unique, name: @registry_name]}
     ]
 
-    # See https://hexdocs.pm/elixir/1.18/Supervisor.html
+    # See https://hexdocs.pm/elixir/1.19/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: IASCRegistry.Supervisor]
     Supervisor.start_link(children, opts)
